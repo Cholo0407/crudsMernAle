@@ -40,7 +40,9 @@ const clientsSchema = new Schema(
     telephone: {
       type: String,
       require: false,
-      minLength: 8
+      match: [/^[0-9]{8}$/,
+        "el telefono debe contener exacatemente 8 digitos"
+      ]
     },
     dui:{
       type: String,

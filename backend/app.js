@@ -3,6 +3,7 @@ import express from "express";
 import productsRoutes from "./src/routes/products.js";
 import clientsRoutes from "./src/routes/clientes.js";
 import employeesRoutes from "./src/routes/employees.js";
+import branchesRoutes from "./src/routes/branches.js";
 
 
 // Creo una constante que es igual a la libreria que importé
@@ -15,6 +16,8 @@ app.use(express.json());
 app.use("/api/products", productsRoutes);
 app.use("/api/clients", clientsRoutes);
 app.use("/api/employees", employeesRoutes);
+app.use("/api/branches", branchesRoutes);
+
 
 // Exporto la constante para poder usar express en otros archivos
 export default app;

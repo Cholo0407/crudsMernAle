@@ -15,7 +15,7 @@
 
 import { Schema, model } from "mongoose";
 
-const clientsSchema = new Schema(
+const employeesSchema = new Schema(
   {
     name: {
       type: String,
@@ -51,18 +51,20 @@ const clientsSchema = new Schema(
     telephone: {
       type: String,
       require: false,
-      minLength: 8
+      match: [/^[0-9]{8}$/,
+        "el telefono debe contener exacatemente 8 digitos"
+      ]
     },
     isssNumber: {
       type: String,
       require: true,
-      match: [0-9],
-      minLength: 9
+      match: [/^[0-9]{8}$/,
+        "el telefono debe contener exacatemente 8 digitos"
+      ]
     },
     dui:{
       type: String,
       require: true,
-      match:[0-9],
       minLength: 10
     },
     isVerified: {
@@ -76,4 +78,4 @@ const clientsSchema = new Schema(
   }
 );
 
-export default model("Employees", clientsSchema);
+export default model("Employees", employeesSchema);
