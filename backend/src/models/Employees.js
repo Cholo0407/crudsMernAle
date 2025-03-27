@@ -2,10 +2,10 @@
     Empleados
   name
   lastName
-  birthday (esto es de tipo Date o lo puden poner como String)
+  birthday 
   email
   address
-  hireDate (esto es de tipo Date o lo puden poner como String)
+  hireDate 
   password
   telephone
   dui
