@@ -56,12 +56,9 @@ registerClientsController.registerClient = async (req, res) =>{
             //2. secret
             config.JWT.secret,
             {expiresIn: config.JWT.expiresIn},
-            //4. arrow function
-            (error, token) => {
-                if(error) console.log("error "+error);
-                res.cookie("verificationToken", token, { maxAge: 2 * 60 * 60 * 1000 })
-            }
         )
+
+        res.cookie("verificationToken", token, { maxAge: 2 * 60 * 60 * 1000})
 
         //Enviar Correo
         //1- transporter: Desde donde lo estoy enviando
@@ -122,6 +119,7 @@ registerClientsController.verifyCodeEmail = async (req, res) =>{
             return res.json({message: "Client not found"})
         }
 
+        //Si el codigo es el mismo
         //A ese cliente le cambio el campo "isVerified" a true
        client.isVerified = true,
        await client.save();
