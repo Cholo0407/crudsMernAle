@@ -1,44 +1,50 @@
 //Array de metodos (C R U D)
 const branchesController = {};
-import branchesModel from "../models/Branches.js";
+import branchesModel from "../models/branches.js";
 
 // SELECT
-branchesController.getBranches = async (req, res) => {
-  const clients = await branchesModel.find();
-  res.json(clients);
+branchesController.getbranches = async (req, res) => {
+  const branches = await branchesModel.find();
+  res.json(branches);
 };
 
 // INSERT
-branchesController.createBranches = async (req, res) => {
-  const { name, addres, telephone, schedule } = req.body;
-  const newProduct = new branchesModel({ name, addres, telephone, schedule });
-  await newProduct.save();
-  res.json({ message: "Branch Saved Succesfully :)" });
+branchesController.createbranches = async (req, res) => {
+  const { name, lastName, birthday, email, password, telephone, dui } = req.body;
+  const newbranches = new branchesModel({ name, lastName, birthday, email, password, telephone, dui});
+  await newbranches.save();
+  res.json({ message: "branches save" });
 };
 
 // DELETE
-branchesController.deleteBranches = async (req, res) => {
-  const deletedProduct = await branchesModel.findByIdAndDelete(req.params.id);
-  if (!deletedProduct) {
-    return res.status(404).json({ message: "Branch Not Found :(" });
+branchesController.deletebranches = async (req, res) => {
+const deletedbranches = await branchesModel.findByIdAndDelete(req.params.id);
+  if (!deletedbranches) {
+    return res.status(404).json({ message: "branches dont find" });
   }
-  res.json({ message: "Branch Deleted!" });
+  res.json({ message: "branches deleted" });
 };
 
 // UPDATE
-branchesController.updateBranches = async (req, res) => {
+branchesController.updatebranches = async (req, res) => {
   // Solicito todos los valores
-  const { name, addres, telephone, schedule } = req.body;
+  const { name, lastName, birthday, email, password, telephone, dui  } = req.body;
   // Actualizo
   await branchesModel.findByIdAndUpdate(
     req.params.id,
     {
-        name, addres, telephone, schedule
+        name, 
+        lastName, 
+        birthday,
+         email, 
+         password, 
+         telephone, 
+         dui 
     },
     { new: true }
   );
   // muestro un mensaje que todo se actualizo
-  res.json({ message: "Branch Updated!" });
+  res.json({ message: "branches update" });
 };
 
 export default branchesController;

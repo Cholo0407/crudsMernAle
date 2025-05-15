@@ -1,75 +1,75 @@
-//importar modelo
-import employeeModel from "../models/Employees.js"
-import bcryptjs from "bcryptjs"; //encriptar
-import jsonwebtoken from "jsonwebtoken"; // generar token
+// Importar el modelo
+import employeeModel from "../models/employee.js";
+import bcryptjs from "bcryptjs"; //Encriptar
+import jsonwebtoken from "jsonwebtoken"; // Token
 import { config } from "../config.js";
+import employeeController from "./employeeControllers.js";
 
-//crear un array de funciones
-const RegisterEmployeeController = {};
+// creamos un array de funciones
+const registerEmployeeController = {};
 
-RegisterEmployeeController.register = async(req, res)=> {
-    //pedir todos los datos
-    const {name,
-        lastName,
+registerEmployeeController.register = async(req, res)=> {
+    // Pedir todos los datos que vamos a guardar
+    const {name, 
+        lastName, 
         birthday,
         email,
         address,
-        hireDate, 
         password,
+        hireDate,
         telephone,
         dui,
-        isssNumber,
         isVerified,
+        issnumber,
     } = req.body;
 
-    try{
-        // 1- verificamos si el empleado ya existe
+    try {
+        // 1- Verificamos si el empleado ya existe
         const existEmployee = await employeeModel.findOne({email})
-        if(existEmployee){
-            return res.json({message: "Employee already exists"})
-        }
+        if(existEmployee) {
+            return res.json({message: "Employee already exist"})
+        } 
 
         // 2- Encriptar la contraseña
         const passwordHash = await bcryptjs.hash(password, 10)
 
-        // 3- Guardar todo en la tabla empleados
-        const newEmployee = new employeeModel({name,
-            lastName,
-            birthday,
-            email,
-            address,
-            hireDate, 
-            password: passwordHash,
-            telephone,
-            dui,
-            isssNumber,
-            isVerified,
+        //3- Guardar todo en la tabla Empleados
+        const newEmployee = new employeeModel({name, 
+        lastName, 
+        birthday,
+        email,
+        address,
+        password: passwordHash,
+        hireDate,
+        telephone,
+        dui,
+        isVerified,
+        issnumber,
         })
 
-        await newEmployee.save()
+        await newEmployee.save();
 
-
-        // TOKEN
+        //TOKEN
         jsonwebtoken.sign(
-            // 1- que voy a guardar
+            //1- Que voy a guardar
             {id: newEmployee._id},
             //2- secreto
             config.JWT.secret,
-            //3- tiempo de expiracion
+            //3- Cuando expira
             {expiresIn: config.JWT.expiresIn},
             //4- funcion flecha
             (error, token) =>{
-                if(error) console.log("error "+ error);
-
-                res.cookie("authToken", token);
-                res.json({message: "empleado guardado"})
+                if(error) console.log("error"+error)
+                
+                res.cookie("authToken", token)
+                res.json({message: "Employee saved"})
             }
         )
 
-    } catch(error){
-        console.log("error "+error)
+    } catch (error) {
+        console.log("error"+error)
         res.json({message: "Error saving employee"})
     }
-}
+} 
 
-export default RegisterEmployeeController;
+export default registerEmployeeController;

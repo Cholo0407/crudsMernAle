@@ -1,10 +1,10 @@
 const logoutController = {};
 
-logoutController.logout = async(req, res) =>{
-    //Limpiar cookies, con esto, se borra el token
-    res.clearCookie("authToken");
+logoutController.logout = async (req, res) => {
+  //limpiar las cookies, con esto, se borra el token
+  res.clearCookie("authToken");
 
-    return res.json({message: "Session closed"})
-}
+  return res.json({ message: "Session closed" });
+};
 
 export default logoutController;

@@ -1,12 +1,11 @@
 import express from "express";
-import registerClientsController from "../controllers/registerClientsController.js"
-
+import registerClientController from "../controllers/registerClientsController.js";
 const router = express.Router()
 
 // /api/registerClients
-router.route("/").post(registerClientsController.registerClient)
+router.route("/").post(registerClientController.registerClient)
 
 // /api/registerClients/verifyCodeEmail
-router.route("/verifyCodeEmail").post(registerClientsController.verifyCodeEmail)
+router.route("/verifyCodeEmail").post(registerClientController.verifyCodeEmail)
 
 export default router
