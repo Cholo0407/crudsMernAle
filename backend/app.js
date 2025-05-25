@@ -15,6 +15,14 @@ import providersRoutes from "./src/routes/providers.js"
 // Creo una constante que es igual a la libreria que importé
 const app = express();
 
+app.use(
+    cors({
+      origin: "http://localhost:5173",
+      // Permitir envío de cookies y credenciales
+      credentials: true
+    })
+);
+
 //Que acepte datos en json
 app.use(express.json());
 //Que postman acepte guardar cookies
