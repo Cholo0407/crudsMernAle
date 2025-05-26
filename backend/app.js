@@ -11,6 +11,7 @@ import logoutRoutes from "./src/routes/logout.js";
 import registerClientRoutes from "./src/routes/registerClients.js";
 import recoveryPasswordRoutes from "./src/routes/recoveryPassword.js";
 import providersRoutes from "./src/routes/providers.js"
+import cors from "cors"
 
 // Creo una constante que es igual a la libreria que importé
 const app = express();
