@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/products.css";
-import EmployeeList from "../components/employees/EmployeeList.jsx";
+import EmployeeList from "../components/employees/employeeList.jsx";
 
 export default function EmployeesForm() {
   const navigate = useNavigate();
@@ -27,7 +27,9 @@ export default function EmployeesForm() {
   const [confirmDelete, setConfirmDelete] = useState({ visible: false, id: null });
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_EMPLOYEES = "http://localhost:4000/api/employees";
+  // Endpoints separados para POST y para GET, PUT, DELETE
+  const API_EMPLOYEES = "http://localhost:4000/api/employee";            // GET, PUT, DELETE
+  const API_REGISTER = "http://localhost:4000/api/registerEmployees";    // POST (registro con encriptación)
 
   useEffect(() => {
     loadEmployees();
@@ -75,7 +77,8 @@ export default function EmployeesForm() {
     try {
       setIsLoading(true);
 
-      const url = form._id ? `${API_EMPLOYEES}/${form._id}` : API_EMPLOYEES;
+      // Para POST usar ruta especial, para PUT usar la estándar
+      const url = form._id ? `${API_EMPLOYEES}/${form._id}` : API_REGISTER;
       const method = form._id ? "PUT" : "POST";
 
       // isVerified siempre false al crear/actualizar desde aquí
@@ -147,40 +150,153 @@ export default function EmployeesForm() {
     <div className="form-container">
       {/* Navegación */}
       <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "30px" }}>
-        <button type="button" onClick={() => navigate("/manage-suppliers")}>
+        <button type="submit" onClick={() => navigate("/manage-suppliers")}>
           Proveedores
         </button>
-        <button type="button" onClick={() => navigate("/manage-employees")}>
-          Empleados
+        <button type="submit" onClick={() => navigate("/")}>
+          Productos
         </button>
       </div>
 
       <h2>{form._id ? "Editar Empleado" : "Registrar Empleado"}</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Nombre" value={form.name} onChange={handleChange} />
-        <input type="text" name="lastName" placeholder="Apellido" value={form.lastName} onChange={handleChange} />
-        <input type="date" name="birthday" placeholder="Fecha de nacimiento" value={form.birthday} onChange={handleChange} />
-        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} />
-        <input type="text" name="addres" placeholder="Dirección" value={form.addres} onChange={handleChange} />
-        <input type="password" name="password" placeholder="Contraseña" value={form.password} onChange={handleChange} />
-        <input type="date" name="hireDate" placeholder="Fecha de contratación" value={form.hireDate} onChange={handleChange} />
-        <input type="text" name="telephone" placeholder="Teléfono" value={form.telephone} onChange={handleChange} />
-        <input type="text" name="dui" placeholder="DUI" value={form.dui} onChange={handleChange} />
-        <input type="text" name="issnumber" placeholder="Número ISS" value={form.issnumber} onChange={handleChange} />
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {/* Grid de 2 columnas para los campos del formulario */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <label>Nombre</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Ej: Juan Carlos"
+              value={form.name}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-        <button type="submit">{form._id ? "Actualizar" : "Guardar"}</button>
-        {form._id && (
-          <button
-            type="button"
-            onClick={() => {
-              setForm(initialEmployee);
-              setMessage(null);
-            }}
-            style={{ marginLeft: "10px" }}
-          >
-            Cancelar
-          </button>
-        )}
+          <div className="flex flex-col">
+            <label>Apellido</label>
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Ej: Pérez García"
+              value={form.lastName}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Fecha de Nacimiento</label>
+            <input
+              type="date"
+              name="birthday"
+              placeholder="Ej: 1990-05-15"
+              value={form.birthday}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Correo Electrónico</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Ej: juan.perez@empresa.com"
+              value={form.email}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Dirección</label>
+            <input
+              type="text"
+              name="addres"
+              placeholder="Ej: Calle Principal #123, San Salvador"
+              value={form.addres}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Ej: MiContraseña123!"
+              value={form.password}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Fecha de Contratación</label>
+            <input
+              type="date"
+              name="hireDate"
+              placeholder="Ej: 2024-01-15"
+              value={form.hireDate}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Teléfono</label>
+            <input
+              type="text"
+              name="telephone"
+              placeholder="Ej: 2234-5678"
+              value={form.telephone}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>DUI</label>
+            <input
+              type="text"
+              name="dui"
+              placeholder="Ej: 12345678-9"
+              value={form.dui}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Número ISS</label>
+            <input
+              type="text"
+              name="issnumber"
+              placeholder="Ej: 123456789012"
+              value={form.issnumber}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+<br />
+        <div style={{ display: "flex", gap: "10px", justifyContent: "center"}}>
+          <button type="submit">{form._id ? "Actualizar" : "Guardar"}</button>
+          {form._id && (
+            <button
+              type="button"
+              onClick={() => {
+                setForm(initialEmployee);
+                setMessage(null);
+              }}
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
       </form>
 
       {message && <p className="message">{message}</p>}

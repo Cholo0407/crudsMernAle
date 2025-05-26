@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // para navegación programática
+import { useNavigate } from "react-router-dom";
 import "../css/products.css";
 import ProductsList from "../components/ProducstList.jsx";
 
@@ -131,49 +131,73 @@ export default function ProductsForm() {
       </div>
 
       <h2>{form._id ? "Editar Producto" : "Registrar Producto"}</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={form.name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Descripción"
-          value={form.description}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stock"
-          value={form.stock}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="price"
-          placeholder="Precio"
-          value={form.price}
-          onChange={handleChange}
-        />
-        <button type="submit">{form._id ? "Actualizar" : "Guardar"}</button>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {/* Grid de 2 columnas para los campos del formulario */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <label>Nombre del producto</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Ej: Shampoo Natural"
+              value={form.name}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-        {form._id && (
-          <button
-            type="button"
-            onClick={() => {
-              setForm(initialProduct);
-              setMessage(null);
-            }}
-            style={{ marginLeft: "10px" }}
-          >
-            Cancelar
-          </button>
-        )}
+          <div className="flex flex-col">
+            <label>Descripción</label>
+            <input
+              type="text"
+              name="description"
+              placeholder="Ej: Producto para el cuidado del cabello"
+              value={form.description}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Cantidad en stock</label>
+            <input
+              type="number"
+              name="stock"
+              placeholder="Ej: 100"
+              value={form.stock}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Precio</label>
+            <input
+              type="number"
+              name="price"
+              placeholder="Ej: 12.50"
+              value={form.price}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+        <br />
+        <div style={{ display: "flex", gap: "10px", justifyContent: "center"}}>
+          <button type="submit">{form._id ? "Actualizar" : "Guardar"}</button>
+
+          {form._id && (
+            <button
+              type="button"
+              onClick={() => {
+                setForm(initialProduct);
+                setMessage(null);
+              }}
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
       </form>
 
       {message && <p className="message">{message}</p>}
