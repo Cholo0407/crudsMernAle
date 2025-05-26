@@ -27,6 +27,20 @@ export default function EmployeesForm() {
   const [confirmDelete, setConfirmDelete] = useState({ visible: false, id: null });
   const [isLoading, setIsLoading] = useState(false);
 
+  // Nombres amigables para validación
+  const fieldNames = {
+    name: "Nombre",
+    lastName: "Apellido",
+    birthday: "Fecha de Nacimiento",
+    email: "Correo Electrónico",
+    addres: "Dirección",
+    password: "Contraseña",
+    hireDate: "Fecha de Contratación",
+    telephone: "Teléfono",
+    dui: "DUI",
+    issnumber: "Número ISS",
+  };
+
   // Endpoints separados para POST y para GET, PUT, DELETE
   const API_EMPLOYEES = "http://localhost:4000/api/employee";            // GET, PUT, DELETE
   const API_REGISTER = "http://localhost:4000/api/registerEmployees";    // POST (registro con encriptación)
@@ -55,10 +69,14 @@ export default function EmployeesForm() {
   };
 
   const validateForm = () => {
-    if (!form.name || !form.lastName || !form.email || !form.password) {
-      setMessage("Completa los campos obligatorios");
-      return false;
+    // Campos obligatorios
+    for (const field in fieldNames) {
+      if (!form[field] || form[field].trim() === "") {
+        setMessage(`El campo "${fieldNames[field]}" es obligatorio.`);
+        return false;
+      }
     }
+
     if (form.password.length < 8) {
       setMessage("La contraseña debe tener al menos 8 caracteres");
       return false;
@@ -67,6 +85,24 @@ export default function EmployeesForm() {
       setMessage("El DUI debe tener al menos 9 caracteres");
       return false;
     }
+
+    // Validar duplicados (email y DUI)
+    const emailExists = items.some(
+      (item) => item.email.toLowerCase() === form.email.toLowerCase() && item._id !== form._id
+    );
+    if (emailExists) {
+      setMessage("El correo electrónico ya está registrado.");
+      return false;
+    }
+
+    const duiExists = items.some(
+      (item) => item.dui === form.dui && item._id !== form._id
+    );
+    if (duiExists) {
+      setMessage("El DUI ya está registrado.");
+      return false;
+    }
+
     return true;
   };
 
@@ -162,6 +198,7 @@ export default function EmployeesForm() {
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {/* Grid de 2 columnas para los campos del formulario */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Nombre */}
           <div className="flex flex-col">
             <label>Nombre</label>
             <input
@@ -174,6 +211,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Apellido */}
           <div className="flex flex-col">
             <label>Apellido</label>
             <input
@@ -186,6 +224,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Fecha de Nacimiento */}
           <div className="flex flex-col">
             <label>Fecha de Nacimiento</label>
             <input
@@ -198,6 +237,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Email */}
           <div className="flex flex-col">
             <label>Correo Electrónico</label>
             <input
@@ -210,6 +250,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Dirección */}
           <div className="flex flex-col">
             <label>Dirección</label>
             <input
@@ -222,6 +263,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Contraseña */}
           <div className="flex flex-col">
             <label>Contraseña</label>
             <input
@@ -234,6 +276,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Fecha de Contratación */}
           <div className="flex flex-col">
             <label>Fecha de Contratación</label>
             <input
@@ -246,6 +289,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Teléfono */}
           <div className="flex flex-col">
             <label>Teléfono</label>
             <input
@@ -258,6 +302,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* DUI */}
           <div className="flex flex-col">
             <label>DUI</label>
             <input
@@ -270,6 +315,7 @@ export default function EmployeesForm() {
             />
           </div>
 
+          {/* Número ISS */}
           <div className="flex flex-col">
             <label>Número ISS</label>
             <input
@@ -282,8 +328,8 @@ export default function EmployeesForm() {
             />
           </div>
         </div>
-<br />
-        <div style={{ display: "flex", gap: "10px", justifyContent: "center"}}>
+        <br />
+        <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
           <button type="submit">{form._id ? "Actualizar" : "Guardar"}</button>
           {form._id && (
             <button

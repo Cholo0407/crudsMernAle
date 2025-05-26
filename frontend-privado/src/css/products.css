@@ -390,3 +390,78 @@ button:hover {
   object-fit: cover;
 }
 
+.employee-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  max-width: 350px;
+}
+
+.employee-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.employee-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.employee-card h3 {
+  color: #2d3748;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  padding-top: 10px;
+}
+
+.employee-card p {
+  color: #4a5568;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  font-size: 0.95rem;
+}
+
+/* Botones visibles con estilos de product-card */
+.employee-card button {
+  margin: 8px 10px 0 0;
+  padding: 10px 20px;
+  font-size: 14px;
+  min-width: 80px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  display: inline-block;
+}
+
+/* Botón Editar - azul degradado */
+.employee-card button:first-of-type {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+}
+
+.employee-card button:first-of-type:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+}
+
+/* Botón Eliminar - rojo degradado */
+.employee-card button:last-of-type {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+}
+
+.employee-card button:last-of-type:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
+}

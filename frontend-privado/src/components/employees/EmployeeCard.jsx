@@ -1,6 +1,6 @@
 export default function EmployeeCard({ employee, onEdit, onDelete }) {
   return (
-    <div className="card">
+    <div className="employee-card">
       <h3>
         {employee.name} {employee.lastName}
       </h3>

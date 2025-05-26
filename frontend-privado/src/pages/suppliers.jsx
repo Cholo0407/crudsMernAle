@@ -110,7 +110,7 @@ export default function SuppliersForm() {
 
   return (
     <div className="form-container">
-        <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "30px" }}>
+      <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "30px" }}>
         <button type="submit" onClick={() => navigate("/")}>
           Productos
         </button>
@@ -121,27 +121,48 @@ export default function SuppliersForm() {
       </div>
 
       <h2>Registrar Proveedor</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={form.name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="telephone"
-          placeholder="Teléfono"
-          value={form.telephone}
-          onChange={handleChange}
-        />
-        <input
-          type="file"
-          accept="image/png, image/jpeg, image/jpg"
-          onChange={handleImageChange}
-        />
-        <button type="submit">Guardar</button>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        {/* Grid de 2 columnas para los campos del formulario */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <label>Nombre del Proveedor</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Ej: Distribuidora Central S.A."
+              value={form.name}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label>Teléfono</label>
+            <input
+              type="text"
+              name="telephone"
+              placeholder="Ej: 2234-5678"
+              value={form.telephone}
+              onChange={handleChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col md:col-span-2">
+            <label>Imagen del Proveedor</label>
+            <input
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={handleImageChange}
+              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+            <small className="text-gray-500 mt-1">Formatos permitidos: PNG, JPEG, JPG</small>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button type="submit">Guardar</button>
+        </div>
       </form>
 
       {message && <p className="message">{message}</p>}
