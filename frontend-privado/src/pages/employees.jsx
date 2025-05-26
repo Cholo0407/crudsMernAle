@@ -12,7 +12,7 @@ export default function EmployeesForm() {
     lastName: "",
     birthday: "",
     email: "",
-    addres: "",
+    address: "",
     password: "",
     hireDate: "",
     telephone: "",
@@ -33,7 +33,7 @@ export default function EmployeesForm() {
     lastName: "Apellido",
     birthday: "Fecha de Nacimiento",
     email: "Correo Electrónico",
-    addres: "Dirección",
+    address: "Dirección",
     password: "Contraseña",
     hireDate: "Fecha de Contratación",
     telephone: "Teléfono",
@@ -69,18 +69,25 @@ export default function EmployeesForm() {
   };
 
   const validateForm = () => {
-    // Campos obligatorios
+    // Campos obligatorios - excluir contraseña si es edición
     for (const field in fieldNames) {
+      // Si es edición (form._id existe) y el campo es password, saltar validación si está vacío
+      if (form._id && field === 'password' && (!form[field] || form[field].trim() === "")) {
+        continue;
+      }
+      
       if (!form[field] || form[field].trim() === "") {
         setMessage(`El campo "${fieldNames[field]}" es obligatorio.`);
         return false;
       }
     }
 
-    if (form.password.length < 8) {
+    // Validar contraseña solo si se está creando o si se proporcionó una nueva contraseña
+    if ((!form._id || form.password.length > 0) && form.password.length < 8) {
       setMessage("La contraseña debe tener al menos 8 caracteres");
       return false;
     }
+    
     if (form.dui.length < 9) {
       setMessage("El DUI debe tener al menos 9 caracteres");
       return false;
@@ -117,11 +124,16 @@ export default function EmployeesForm() {
       const url = form._id ? `${API_EMPLOYEES}/${form._id}` : API_REGISTER;
       const method = form._id ? "PUT" : "POST";
 
-      // isVerified siempre false al crear/actualizar desde aquí
-      const payload = {
+      // Preparar payload
+      let payload = {
         ...form,
         isVerified: false,
       };
+
+      // Si es actualización y la contraseña está vacía, no incluirla en el payload
+      if (form._id && (!form.password || form.password.trim() === "")) {
+        delete payload.password;
+      }
 
       const res = await fetch(url, {
         method,
@@ -148,7 +160,7 @@ export default function EmployeesForm() {
       lastName: item.lastName || "",
       birthday: item.birthday ? item.birthday.substring(0, 10) : "",
       email: item.email || "",
-      addres: item.addres || "",
+      address: item.address || "",
       password: "", // No mostrar la contraseña
       hireDate: item.hireDate ? item.hireDate.substring(0, 10) : "",
       telephone: item.telephone || "",
@@ -246,7 +258,10 @@ export default function EmployeesForm() {
               placeholder="Ej: juan.perez@empresa.com"
               value={form.email}
               onChange={handleChange}
-              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={form._id && isLoading}
+              className={`p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                form._id && isLoading ? 'bg-gray-100 cursor-not-allowed' : ''
+              }`}
             />
           </div>
 
@@ -255,9 +270,9 @@ export default function EmployeesForm() {
             <label>Dirección</label>
             <input
               type="text"
-              name="addres"
+              name="address"
               placeholder="Ej: Calle Principal #123, San Salvador"
-              value={form.addres}
+              value={form.address}
               onChange={handleChange}
               className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -265,14 +280,24 @@ export default function EmployeesForm() {
 
           {/* Contraseña */}
           <div className="flex flex-col">
-            <label>Contraseña</label>
+            <label>
+              Contraseña
+              {form._id && (
+                <span className="text-sm text-gray-500 ml-2">
+                  (Dejar vacío para mantener la actual)
+                </span>
+              )}
+            </label>
             <input
               type="password"
               name="password"
-              placeholder="Ej: MiContraseña123!"
+              placeholder={form._id ? "Dejar vacío para no cambiar" : "Ej: MiContraseña123!"}
               value={form.password}
               onChange={handleChange}
-              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={form._id && isLoading}
+              className={`p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                form._id && isLoading ? 'bg-gray-100 cursor-not-allowed' : ''
+              }`}
             />
           </div>
 
@@ -311,7 +336,10 @@ export default function EmployeesForm() {
               placeholder="Ej: 12345678-9"
               value={form.dui}
               onChange={handleChange}
-              className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={form._id && isLoading}
+              className={`p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                form._id && isLoading ? 'bg-gray-100 cursor-not-allowed' : ''
+              }`}
             />
           </div>
 
@@ -330,7 +358,9 @@ export default function EmployeesForm() {
         </div>
         <br />
         <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-          <button type="submit">{form._id ? "Actualizar" : "Guardar"}</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Procesando..." : (form._id ? "Actualizar" : "Guardar")}
+          </button>
           {form._id && (
             <button
               type="button"
@@ -338,6 +368,7 @@ export default function EmployeesForm() {
                 setForm(initialEmployee);
                 setMessage(null);
               }}
+              disabled={isLoading}
             >
               Cancelar
             </button>
@@ -354,8 +385,8 @@ export default function EmployeesForm() {
       {confirmDelete.visible && (
         <div className="confirm-dialog">
           <p>¿Estás seguro que deseas eliminar este empleado?</p>
-          <button onClick={handleDelete}>Sí</button>
-          <button onClick={() => setConfirmDelete({ visible: false, id: null })}>No</button>
+          <button onClick={handleDelete} disabled={isLoading}>Sí</button>
+          <button onClick={() => setConfirmDelete({ visible: false, id: null })} disabled={isLoading}>No</button>
         </div>
       )}
     </div>

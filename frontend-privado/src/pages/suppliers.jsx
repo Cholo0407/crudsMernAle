@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../css/products.css";
 import { useNavigate } from "react-router-dom";
 import SuppliersList from "../components/suppliers/SupplierList.jsx";
@@ -18,6 +18,8 @@ export default function SuppliersForm() {
   const [confirmDelete, setConfirmDelete] = useState({ visible: false, id: null });
   const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+
+  const fileInputRef = useRef(null);
 
   const API_SUPPLIERS = "http://localhost:4000/api/providers";
 
@@ -51,7 +53,8 @@ export default function SuppliersForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.name || !form.telephone) {
+    // Validación campos obligatorios no vacíos
+    if (!form.name.trim() || !form.telephone.trim()) {
       setMessage("Por favor completa los campos obligatorios.");
       return;
     }
@@ -77,6 +80,12 @@ export default function SuppliersForm() {
       setMessage("Proveedor registrado.");
       setForm(initialSupplier);
       setImageFile(null);
+
+      // Limpiar input file
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null;
+      }
+
       loadSuppliers();
     } catch {
       setMessage("Error al guardar el proveedor.");
@@ -122,7 +131,6 @@ export default function SuppliersForm() {
 
       <h2>Registrar Proveedor</h2>
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        {/* Grid de 2 columnas para los campos del formulario */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col">
             <label>Nombre del Proveedor</label>
@@ -154,13 +162,14 @@ export default function SuppliersForm() {
               type="file"
               accept="image/png, image/jpeg, image/jpg"
               onChange={handleImageChange}
+              ref={fileInputRef}
               className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
             <small className="text-gray-500 mt-1">Formatos permitidos: PNG, JPEG, JPG</small>
           </div>
         </div>
-
-        <div style={{ display: "flex", gap: "10px" }}>
+<br />
+        <div style={{ display: "flex", gap: "10px", justifyContent:"center"}}>
           <button type="submit">Guardar</button>
         </div>
       </form>
