@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/products.css";
-import EmployeeList from "../components/employees/employeeList.jsx";
+import EmployeeList from "../components/employees/EmployeeList.jsx";
 
 export default function EmployeesForm() {
   const navigate = useNavigate();
