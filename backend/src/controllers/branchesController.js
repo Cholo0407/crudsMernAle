@@ -1,6 +1,6 @@
 //Array de metodos (C R U D)
 const branchesController = {};
-import branchesModel from "../models/branches.js";
+import branchesModel from "../models/Branches.js";
 
 // SELECT
 branchesController.getbranches = async (req, res) => {
